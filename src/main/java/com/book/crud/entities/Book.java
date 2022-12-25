@@ -15,12 +15,19 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
     private String title;
+
     private String author;
+
     private String publisher;
+
     private String edition;
+
     private String isbn;
+
     private int pages;
+
     private boolean status;
 
 }

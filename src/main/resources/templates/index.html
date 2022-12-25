@@ -29,59 +29,29 @@
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" th:href="@{/addBook}">Add Book</a>
                         </li>
+						<li class="nav-item">
+							<a class="nav-link" aria-current="page" th:href="@{/bookShelf/0}">Book Shelf</a>
+						</li>
                     </ul>
                 </div>
             </div>
         </nav>
     </div>
     
-    <!-- Book Table Section -->
-    <section id="book-table" class="mt-4">
-    	<div class="container">
-    		<div class="row">
-    			<div class="col-md-12">
-					<!-- FLASH MESSAGE START -->
-					<div class="mb-4" th:if="${msg}">
-						<div class="alert alert-info text-center" role="alert" th:text=${msg}>
-						</div>
-					</div>
-					<!-- FLASH MESSAGE END -->
-    		        <h2 class="text-center mb-4">Book List</h2>
-    				<table class="table table-striped">
-					     <thead class="bg-info">
-					         <tr>
-					             <th scope="col">#</th>
-					             <th scope="col">Title</th>
-					             <th scope="col">Author</th>
-					             <th scope="col">Publisher</th>
-					             <th scope="col">Edition</th>
-					             <th scope="col">ISBN</th>
-					             <th scope="col">Pages</th>
-					             <th scope="col">Status</th>
-								 <th scope="col">Action</th>
-					      	 </tr>
-					     </thead>
-					     <tbody>
-					         <tr th:each="book : ${books}">
-					             <td th:text="${book.id}"></td>
-					             <td th:text=${book.title}></td>
-					             <td th:text=${book.author}></td>
-					             <td th:text=${book.publisher}></td>
-					             <td th:text=${book.edition}></td>
-								 <td th:text="${book.isbn}"></td>
-					             <td th:text=${book.pages}></td>
-					             <td th:if="${book.status}" th:text="Available"></td>
-								 <td th:unless="${book.status}" th:text="Unavailable"></td>
-					             <td>
-					             	<a th:href="@{/editBook/{id}(id=${book.id})}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i></a>
-					             	<a th:href="@{/deleteBook/{id}(id=${book.id})}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></a>
-					             </td>
-					         </tr>					    
-					     </tbody>
-					</table>
-    			</div>
-    		</div>
-    	</div>
+    <!-- Book Cover Section -->
+    <section class="book-cover mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card p-3 text-center">
+                        <div class="card-body">
+                            <img class="img rounded" th:src="@{/img/book.jpg}" alt="Book Cover">
+                            <a class="btn btn-primary mt-3 mb-0" th:href="@{/addBook}">Add New Book To Your Shelf</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Footer Section -->

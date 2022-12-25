@@ -3,6 +3,8 @@ package com.book.crud.services;
 import com.book.crud.entities.Book;
 import com.book.crud.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,8 @@ public class BookService {
     }
 
     //To get all the books
-    public List<Book> getAllBooks(){
-        return bookRepo.findAll();
+    public Page<Book> getAllBooks(Pageable pageable){
+        return bookRepo.findAll(pageable);
     }
 
     //To get a book by it's id

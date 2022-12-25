@@ -1,13 +1,19 @@
 package com.book.crud.controllers;
 
 import com.book.crud.entities.Book;
+import com.book.crud.helpers.Message;
 import com.book.crud.services.BookService;
 
 import jakarta.servlet.http.HttpSession;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,10 +27,7 @@ public class BookController {
 
     //To view index page
     @GetMapping("/")
-    public String home(Model model){
-    	List<Book> books = bookService.getAllBooks();
-    	model.addAttribute("books", books);
-    	
+    public String home(){
         return "index";
     }
 
@@ -36,20 +39,33 @@ public class BookController {
 
     //Add a new book
     @PostMapping("/addBookProcess")
-    public String addBook(@ModelAttribute Book book, RedirectAttributes redirectAttributes){
+    public String addBook(@Valid @ModelAttribute Book book, RedirectAttributes redirectAttributes, Model model){
     	try {
     		//When a user add a book, automatically will be available for sharing
         	book.setStatus(true);
         	//System.out.println(book);
             bookService.addBook(book);
-            redirectAttributes.addFlashAttribute("msg", "Your book is added successfully.");
+            redirectAttributes.addFlashAttribute("msg", new Message("Your book is added successfully.", "alert-info"));
             
             return "redirect:/addBook";
     	}
     	catch(Exception E) {
-            redirectAttributes.addFlashAttribute("msg", "Something went wrong! Please Try again later.");
+            redirectAttributes.addFlashAttribute("msg", new Message("Something went wrong! Please Try again later.", "alert-danger"));
     		return "redirect:/addBook";
     	}
+    }
+
+    //To view book shelf page
+    @GetMapping("/bookShelf/{page}")
+    public String bookShelf(@PathVariable int page, Model model){
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Book> books = bookService.getAllBooks(pageable);
+
+        model.addAttribute("books", books);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", books.getTotalPages());
+
+        return "bookShelf";
     }
 
     //To view edit book page
@@ -57,8 +73,8 @@ public class BookController {
     public String viewEditBook(@PathVariable long id, Model model, RedirectAttributes redirectAttributes){
         Book book = bookService.getBookById(id);
         if(book == null){
-            redirectAttributes.addFlashAttribute("msg", "Something went wrong! Please try again later.");
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("msg", new Message("Something went wrong! Please try again later.", "alert-danger"));
+            return "redirect:/bookShelf/0";
         }
         else{
             model.addAttribute("book", book);
@@ -73,12 +89,12 @@ public class BookController {
             Book existing = bookService.getBookById(book.getId());
             book.setStatus(existing.isStatus()); //Set the previous status
             bookService.addBook(book);
-            redirectAttributes.addFlashAttribute("msg", "Your book information is updated.");
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("msg", new Message("Your book information is updated.", "alert-info"));
+            return "redirect:/bookShelf/0";
         }
         catch(Exception e){
-            redirectAttributes.addFlashAttribute("msg", "Something went wrong! Please try again later.");
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("msg", new Message("Something went wrong! Please try again later.", "alert-danger"));
+            return "redirect:/bookShelf/0";
         }
     }
 
@@ -94,11 +110,11 @@ public class BookController {
 //        return bookService.getBookById(id);
 //    }
 
-    //Update an existing book
-    @PutMapping("/update")
-    public Book updateBook(@RequestBody Book book){
-        return bookService.updateBook(book);
-    }
+//    //Update an existing book
+//    @PutMapping("/update")
+//    public Book updateBook(@RequestBody Book book){
+//        return bookService.updateBook(book);
+//    }
 
     //Delete a book by its id
     @GetMapping("/deleteBook/{id}")
@@ -106,13 +122,13 @@ public class BookController {
         //To get the existing book
         Book existing  = bookService.getBookById(id);
         if(existing == null){
-            redirectAttributes.addFlashAttribute("msg", "Something went wrong! Please try again later.");
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("msg", new Message("Something went wrong! Please try again later.", "alert-danger"));
+            return "redirect:/bookShelf/0";
         }
         else{
             bookService.deleteBook(id);
-            redirectAttributes.addFlashAttribute("msg", "Book is deleted successfully.");
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("msg", new Message("Book is deleted successfully.", "alert-info"));
+            return "redirect:/bookShelf/0";
         }
     }
 
