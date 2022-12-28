@@ -50,17 +50,21 @@
                             </div>
                             <!-- FLASH MESSAGE END -->
                             <h2 class="text-center mb-2">Add New Book</h2>
-                            <form method="POST" th:action="@{/addBookProcess}"  >
+                            <form method="POST" th:action="@{/addBookProcess}" th:object="${book}">
                                 <div class="form-group">
                                     <label for="title">Book Title</label>
                                     <input
                                             type="text"
                                             class="form-control"
                                             name="title"
+                                            th:value="${book.title}"
                                             placeholder="Enter Book Title"
-                                            required
+                                            th:classappend="${#fields.hasErrors('title') ? 'is-invalid' : ''}"
                                     />
 
+                                    <div class="invalid-feedback" th:each="e : ${#fields.errors('title')}" th:text="${e}">
+
+                                    </div>
                                 </div>
 
                                 <div class="form-group mt-2">
@@ -69,9 +73,14 @@
                                             type="text"
                                             class="form-control"
                                             name="author"
+                                            th:value="${book.author}"
                                             placeholder="Enter Author Name"
-                                            required
+                                            th:classappend="${#fields.hasErrors('author') ? 'is-invalid' : ''}"
                                     />
+
+                                    <div class="invalid-feedback" th:each="e : ${#fields.errors('author')}" th:text="${e}">
+
+                                    </div>
                                 </div>
 
                                 <div class="form-group mt-2">
@@ -80,9 +89,14 @@
                                             type="text"
                                             class="form-control"
                                             name="publisher"
+                                            th:value="${book.publisher}"
                                             placeholder="Enter Publisher Name"
-                                            required
+                                            th:classappend="${#fields.hasErrors('publisher') ? 'is-invalid' : ''}"
                                     />
+
+                                    <div class="invalid-feedback" th:each="e : ${#fields.errors('publisher')}" th:text="${e}">
+
+                                    </div>
                                 </div>
 
                                 <div class="form-group mt-2">
@@ -91,9 +105,14 @@
                                             type="text"
                                             class="form-control"
                                             name="edition"
+                                            th:value="${book.edition}"
                                             placeholder="Enter Book Edition"
-                                            required
+                                            th:classappend="${#fields.hasErrors('edition') ? 'is-invalid' : ''}"
                                     />
+
+                                    <div class="invalid-feedback" th:each="e : ${#fields.errors('edition')}" th:text="${e}">
+
+                                    </div>
                                 </div>
 
                                 <div class="form-group mt-2">
@@ -102,9 +121,14 @@
                                             type="text"
                                             class="form-control"
                                             name="isbn"
+                                            th:value="${book.isbn}"
                                             placeholder="Enter ISBN Number"
-                                            required
+                                            th:classappend="${#fields.hasErrors('isbn') ? 'is-invalid' : ''}"
                                     />
+
+                                    <div class="invalid-feedback" th:each="e : ${#fields.errors('isbn')}" th:text="${e}">
+
+                                    </div>
                                 </div>
 
                                 <div class="form-group mt-2">
@@ -113,9 +137,14 @@
                                             type="number"
                                             class="form-control"
                                             name="pages"
+                                            th:value="${book.pages}"
                                             placeholder="Enter Pages Number"
-                                            required
+                                            th:classappend="${#fields.hasErrors('pages') ? 'is-invalid' : ''}"
                                     />
+
+                                    <div class="invalid-feedback" th:each="e : ${#fields.errors('pages')}" th:text="${e}">
+
+                                    </div>
                                 </div>
 
                                 <div class="row mt-2">

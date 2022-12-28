@@ -33,14 +33,21 @@ public class BookController {
 
     //To view add book page
     @GetMapping("/addBook")
-    public String viewAddBookPage(){
+    public String viewAddBookPage(Model model){
+        model.addAttribute("book", new Book());
         return "addBook";
     }
 
     //Add a new book
     @PostMapping("/addBookProcess")
-    public String addBook(@Valid @ModelAttribute Book book, RedirectAttributes redirectAttributes, Model model){
+    public String addBook(@Valid @ModelAttribute Book book, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model){
     	try {
+            //Server-side validation
+            if(bindingResult.hasErrors()){
+                model.addAttribute("book", book);
+                return "addBook";
+            }
+
     		//When a user add a book, automatically will be available for sharing
         	book.setStatus(true);
         	//System.out.println(book);
@@ -50,6 +57,7 @@ public class BookController {
             return "redirect:/addBook";
     	}
     	catch(Exception E) {
+            model.addAttribute("book", book);
             redirectAttributes.addFlashAttribute("msg", new Message("Something went wrong! Please Try again later.", "alert-danger"));
     		return "redirect:/addBook";
     	}
@@ -84,8 +92,14 @@ public class BookController {
 
     //To edit an existing book
     @PostMapping("/editBookProcess")
-    public String editBook(@ModelAttribute Book book, RedirectAttributes redirectAttributes){
+    public String editBook(@Valid @ModelAttribute Book book, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model){
         try{
+            //Server-side Validation
+            if(bindingResult.hasErrors()){
+                model.addAttribute("book", book);
+                return "editBook";
+            }
+
             Book existing = bookService.getBookById(book.getId());
             book.setStatus(existing.isStatus()); //Set the previous status
             bookService.addBook(book);
